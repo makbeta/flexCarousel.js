@@ -170,7 +170,7 @@
 
       // Clone all the slides, add the correct order property value, slide width and append to the slides container
       // Fixes issue #2
-      if(self.options.slidesVisible === slide.length - 1) {
+      if(self.options.slidesVisible === slide.length - 1 || self.options.center) {
         slide.each(function() {
           $(this).clone().addClass('fc-is-clone').css('min-width', slideWidth).appendTo(slides);
         });
