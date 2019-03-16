@@ -151,7 +151,7 @@
     const self = this;
 
     let slide = self.selector.find('> div');
-    slide.addClass('fc-slide').wrapAll('<div class="fc-container"><div class="fc-slides ' + self.transitionClasses() + '" /></div>');
+    slide.addClass('fc-slide').wrapAll('<div class="fc-container"><div ' + self.slidesClassAttr() + ' /></div>');
 
     let slideWidth = 100 / self.options.slidesVisible + '%';
 
@@ -290,20 +290,21 @@
     circle.eq(self.activeSlide).addClass('fc-is-active');
   };
 
+  object.slidesClassAttr = function() {
+    const self = this;
+    let slidesClass = 'fc-slides';
+
+    if(self.options.transition === 'slide') {
+      return 'class="' + slidesClass + ' fc-slide-animation"';
+    }
+  };
+
   object.transition = function() {
     const self = this;
     let slides = self.selector.find('.fc-slides');
 
     if(self.options.transition === 'slide') {
       slides.toggleClass('fc-slide-animation');
-    }
-  };
-
-  object.transitionClasses = function() {
-    const self = this;
-
-    if(self.options.transition === 'slide') {
-      return 'fc-slide-animation';
     }
   };
 
