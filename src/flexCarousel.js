@@ -158,10 +158,8 @@
     let slides = self.selector.find('.fc-slides');
 
     if(self.options.slidesVisible < slide.length) {
-      slide.last().css('order', 1);
       slide.css('min-width', 'calc(100% / ' + self.options.slidesVisible + ')');
-
-      slides.css('left', '-' + slideWidth);
+      slide.last().css('order', 1);
 
       // Clone all the slides, add the correct order property value, slide width and append to the slides container
       // Fixes issue #2
@@ -170,6 +168,8 @@
           $(this).clone().addClass('fc-is-clone').appendTo(slides);
         });
       }
+
+      slides.css('left', '-' + slideWidth);
       slides.children().last().css('order', 1);
 
       let i = 2;
@@ -190,7 +190,7 @@
       });
 
       if(self.options.transition === 'slide') {
-        slides.css('transform', 'translateX(80%)');
+        slides.css('transform', 'translateX(' + slideWidth + ')');
       }
     }
   };
@@ -204,7 +204,7 @@
     if(amount === 'increase') {
       // Determine whether the carousel is going forward or backward
       if(self.options.transition === 'slide') {
-        slides.css('transform', 'translateX(-80%)');
+        slides.css('transform', 'translateX(-' + slideWidth + ')');
       }
 
       slide.each(function() {
@@ -220,7 +220,7 @@
     } else {
       // Determine whether the carousel is going forward or backward
       if(self.options.transition === 'slide') {
-        slides.css('transform', 'translateX(80%)');
+        slides.css('transform', 'translateX(' + slideWidth + ')');
       }
 
       slide.each(function() {
