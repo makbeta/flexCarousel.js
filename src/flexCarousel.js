@@ -33,6 +33,7 @@
         autoplay: false,
         autoplaySpeed: 5000,
         center: false,
+        centerGap: '2.5%',
         circles: true,
         circlesOverlay: true,
         height: null,
@@ -154,11 +155,10 @@
     slide.addClass('fc-slide').wrapAll('<div class="fc-container"><div class="fc-slides ' + self.transitionClasses() + '" /></div>');
 
     let slideWidth = 100 / self.options.slidesVisible + '%';
-
     let slides = self.selector.find('.fc-slides');
 
     if(self.options.slidesVisible < slide.length) {
-      slide.css('min-width', 'calc(100% / ' + self.options.slidesVisible + ')');
+      slide.css('min-width', slideWidth);
 
       // Clone all the slides, add the correct order property value, slide width and append to the slides container
       // Fixes issue #2
@@ -169,10 +169,12 @@
       }
 
       slides.css('left', '-' + slideWidth);
-      slides.children().last().css('order', 1);
 
-      let i = 2;
-      slides.children().slice(0, slides.children().length - 1).each(function () {
+      slides.find(':nth-last-child(2)').css('order', 1);
+      slides.children().last().css('order', 2);
+
+      let i = 3;
+      slides.children().slice(0, slides.children().length - 2).each(function () {
         $(this).css('order', i++);
       });
 
@@ -188,9 +190,7 @@
         }
       });
 
-      if(self.options.transition === 'slide') {
-        slides.css('transform', 'translateX(' + slideWidth + ')');
-      }
+      slides.css('transform', 'translateX(' + slideWidth + ')');
     }
   };
 
