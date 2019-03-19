@@ -159,7 +159,6 @@
 
     if(self.options.slidesVisible < slide.length) {
       slide.css('min-width', 'calc(100% / ' + self.options.slidesVisible + ')');
-      slide.last().css('order', 1);
 
       // Clone all the slides, add the correct order property value, slide width and append to the slides container
       // Fixes issue #2
