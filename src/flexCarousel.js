@@ -170,13 +170,26 @@
 
       slides.css('left', '-' + slideWidth);
 
-      slides.find(':nth-last-child(2)').css('order', 1);
-      slides.children().last().css('order', 2);
+      if(self.options.center) {
+        let minus = self.options.slidesVisible - 1;
+        slides.children().last().css('order', minus);
 
-      let i = 3;
-      slides.children().slice(0, slides.children().length - 2).each(function () {
-        $(this).css('order', i++);
-      });
+        slides.children().slice(0, slides.children().length - minus).each(function () {
+          $(this).css('order', self.options.slidesVisible++);
+        });
+
+        let i = 1;
+        slides.children().slice(slides.children().length - minus, slides.children().length - 1).each(function () {
+          $(this).css('order', i++);
+        });
+      } else {
+        slides.children().last().css('order', 1);
+
+        let i = 2;
+        slides.children().slice(0, slides.children().length - 1).each(function () {
+          $(this).css('order', i++);
+        });
+      }
 
       slide.each(function () {
         let image = $(this).find('img');
