@@ -47,8 +47,10 @@
 
       // This will always have active slide index
       self.activeSlide = 0;
-
+      self.responsiveBreakpoints = [];
+      self.responsiveOptions = [];
       self.selector = $(selector);
+
       self.init();
     }
 
@@ -235,6 +237,18 @@
     }
   };
 
+  object.getBreakpoints = function() {
+    const self = this;
+    let breakpoint;
+
+    if(self.options.responsive) {
+      for(breakpoint in self.options.responsive) {
+        let breakpoints = self.options.responsive[breakpoint].breakpoint;
+        self.responsiveBreakpoints.push(breakpoints);
+      }
+    }
+  }
+
   object.goToSlide = function(position) {
     const self = this;
     let activeSlide = self.activeSlide;
@@ -243,10 +257,6 @@
 
     self.moveSlide(direction, shift);
   };
-
-  object.checkResponsive = function() {
-    const self = this;
-  }
 
   object.height = function() {
     const self = this;
@@ -268,7 +278,7 @@
       self.buildEvents();
       self.height();
       self.autoplay();
-      self.checkResponsive();
+      self.getBreakpoints();
     }
   };
 
