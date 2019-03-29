@@ -44,8 +44,7 @@
 
       // Combine both objects
       self.options = $.extend(self.defaults, options);
-
-      // This will always have active slide index
+      
       self.activeSlide = 0;
       self.responsiveBreakpoints = [];
       self.responsiveOptions = [];
@@ -148,6 +147,19 @@
     self.buildArrowEvents();
     self.buildCircleEvents();
   };
+
+  object.buildResponsive = function() {
+    const self = this;
+    let breakpoint;
+
+    if(self.options.responsive) {
+      for(breakpoint in self.responsiveBreakpoints) {
+        if(window.innerWidth > self.responsiveBreakpoints[breakpoint]) {
+          let targetBreakpoint = self.responsiveBreakpoints[breakpoint];
+        }
+      }
+    }
+  }
 
   object.buildSlides = function() {
     const self = this;
@@ -279,6 +291,7 @@
       self.height();
       self.autoplay();
       self.getBreakpoints();
+      self.buildResponsive();
     }
   };
 
