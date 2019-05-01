@@ -38,7 +38,7 @@
         nextArrow: '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" class="svg-inline--fa fa-angle-right fa-w-8" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg>',
         prevArrow: '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-left" class="svg-inline--fa fa-angle-left fa-w-8" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512"><path fill="currentColor" d="M31.7 239l136-136c9.4-9.4 24.6-9.4 33.9 0l22.6 22.6c9.4 9.4 9.4 24.6 0 33.9L127.9 256l96.4 96.4c9.4 9.4 9.4 24.6 0 33.9L201.7 409c-9.4 9.4-24.6 9.4-33.9 0l-136-136c-9.5-9.4-9.5-24.6-.1-34z"></path></svg>',
         slidesVisible: 1,
-        slidesPerPage: 1,
+        slidesToScroll: 1,
         transition: 'slide',
       };
 
@@ -105,9 +105,9 @@
 
     if(self.options.circles) {
       circle.click(function(event) {
-        let $clickedCircle = $(event.currentTarget);
-        if(!$clickedCircle.hasClass('fc-is-active')) {
-          let index = $clickedCircle.data('fc-slide-index');
+        let clickedCircle = $(event.currentTarget);
+        if(!clickedCircle.hasClass('fc-is-active')) {
+          let index = clickedCircle.data('fc-slide-index');
           self.goToSlide(index);
         }
       });
@@ -127,7 +127,7 @@
         let circles = self.selector.find('.fc-circles');
 
         slide.each(function (index) {
-          if (index % self.options.slidesPerPage === 0) {
+          if (index % self.options.slidesToScroll === 0) {
             circles.append('<div class="fc-circle" data-fc-slide-index="' + index + '"><span class="fc-icon fc-is-circle"></span></div>');
           }
         });
@@ -179,14 +179,20 @@
         $(this).css('order', i++);
       });
 
-      slide.each(function () {
-        let image = $(this).find('img');
+      slide.each(function (index, element) {
+        let slide = $(element);
+        let image = slide.find('img');
         let imageCaption = image.data('caption');
+        let picture = slide.find('picture');
+        let pictureCaption = picture.data('caption');
 
         // Wrap the images and use data attribute for captions for cleaner HTML markup
-        image.wrap('<figure class="fc-image"></figure>');
-
-        if (imageCaption) {
+        // but only if we have a caption
+        if (pictureCaption) {
+          picture.wrap('<figure class="fc-image"></figure>');
+          picture.after('<figcaption>' + pictureCaption + '</figcaption>');
+        } else if (imageCaption) {
+          image.wrap('<figure class="fc-image"></figure>');
           image.after('<figcaption>' + imageCaption + '</figcaption>');
         }
       });
@@ -272,6 +278,7 @@
 
   object.moveSlide = function(direction, shift) {
     const self = this;
+    let activeCircleIndex = 0;
     let activeSlide = self.activeSlide;
     let circle = self.selector.find('.fc-circle');
 
@@ -288,8 +295,9 @@
 
     // updating active slide number every time slide changes
     self.updateActiveSlideNumber(direction, shift);
-    circle.eq(activeSlide).removeClass('fc-is-active');
-    circle.eq(self.activeSlide).addClass('fc-is-active');
+    activeCircleIndex = Math.floor(self.activeSlide / self.options.slidesToScroll);
+    circle.removeClass('fc-is-active');
+    circle.eq(activeCircleIndex).addClass('fc-is-active');
   };
 
   object.transition = function() {
