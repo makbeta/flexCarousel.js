@@ -45,13 +45,28 @@
 
       // Combine both objects
       self.options = $.extend(self.defaults, options);
-      
-      self.activeSlide = 0;
-      self.responsiveBreakpoints = [];
-      self.responsiveOptions = [];
-      self.selector = $(selector);
 
+      self.activeSlide = 0;
+      self.currentBreakpoint = 0;
+      self.options.responsiveBreakpoints = [];
+      self.options.responsiveOptions = [];
+      self.selector = $(selector);
+      // Backup original structure & options for easy swap in on destroy.
+      self.originalCode = self.selector.html();
+
+      // need to detrmine active breakpoint before initializing
       self.init();
+      
+      // may be useful to debounce resize in the future
+      $(window).on('resize', function(event) {
+        let newBreakpoint = self.getNewBreakpoint();
+        if (self.currentBreakpoint !== newBreakpoint) {
+          self.destroy();
+          self.currentBreakpoint = newBreakpoint;
+          // set breakpoint options as global options
+          self.init();
+        }
+      });
     }
 
     return flexCarousel;
@@ -267,6 +282,15 @@
     }
   };
 
+  /**
+   * Destroy the flex carousel by replacing HTML with the original
+   */
+  object.destroy = function() {
+    const flexCarousel = this;
+    flexCarousel.selector.removeClass('fc');
+    flexCarousel.selector.html(flexCarousel.originalCode);
+  }
+
   object.getBreakpoints = function() {
     const self = this;
     let breakpoint;
@@ -277,6 +301,10 @@
         self.responsiveBreakpoints.push(breakpoints);
       }
     }
+  }
+
+  object.getNewBreakpoint = function() {
+    // TODO
   }
 
   object.goToSlide = function(position) {
@@ -372,7 +400,7 @@
   };
 
   $.fn.flexCarousel = function() {
-    const self = this;
+    const self = this; // carouselObject
     let options = arguments[0];
 
     for (let i = 0; i < self.length; i++) {
